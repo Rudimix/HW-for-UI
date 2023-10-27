@@ -1,0 +1,395 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace HW2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("1. Задача1\n" +
+                "2. Задача2\n" +
+                "3. Задача3\n" +
+                "4. Задача4\n" +
+                "5. Задача5\n");
+            Console.Write("Выберите задание:");
+            int choice = int.Parse(Console.ReadLine());
+
+            switch (choice)
+            {
+                case 1:
+                    Exercise1();
+                    break;
+                case 2:
+                    Exercise2();
+                    break;
+                case 3:
+                    Exercise3();
+                    break;
+                case 4:
+                    Exercise4();
+                    break;
+                case 5:
+                    Exercise5();
+                    break;
+                default:
+                    Console.WriteLine("Некорректный выбор");
+                    break;
+            }
+        }
+
+        static void Exercise1()
+        {
+            Console.Write("Введите размер исходного массива: ");
+            int n = int.Parse(Console.ReadLine());
+            Console.Write("Введите размер группы: ");
+            int m = int.Parse(Console.ReadLine());
+            Console.Write("Введите номер, с которого вставить группу: ");
+            int k = int.Parse(Console.ReadLine());
+
+            int[] array = new int[n];
+            int[] group = new int[m];
+
+            RandomInitialization(array);
+            RandomInitialization(group);
+
+            PrintArray("Массив", array);
+            PrintArray("Группа", group);
+
+            int[] new_array = new int[n+m];
+            // Копируем элементы исходного массива до индекса k в новый массив
+            for (int i = 0; i < k; i++)
+            {
+                new_array[i] = array[i];
+            }
+
+            // Копируем элементы группы в новый массив начиная с индекса k
+            for (int i = 0; i < group.Length; i++)
+            {
+                new_array[k + i] = group[i];
+            }
+
+            // Копируем оставшиеся элементы исходного массива в новый массив начиная с индекса k + m
+            for (int i = k-1; i < array.Length-1; i++)
+            {
+                new_array[k + group.Length-1 + i] = array[i+1];
+            }
+            PrintArray("Новый массив", new_array);
+        }
+        static void Exercise2()
+        {
+            Console.Write("Введите размер исходного массива: ");
+            int n = int.Parse(Console.ReadLine());
+
+            int[] array = new int[n];
+            int middle = array.Length / 2;
+            int cpos = middle + array.Length % 2;
+
+            RandomInitialization(array);
+
+            PrintArray("Массив", array);
+
+            for (int i = 0; i < middle; i++)
+            {
+                int temp = array[i];
+                array[i] = array[cpos + i];
+                array[cpos + i] = temp;
+            }
+
+            PrintArray("Итоговый массив", array);
+        }
+        static void Exercise3()
+        {
+            Console.WriteLine("1. Заполнить случайными числами\n" +
+                "2. Сложение массивов\n" +
+                "3. Умножение массива на число\n" +
+                "4. Поиск общих значений\n" +
+                "5. Сортировка по убыванию\n" +
+                "6. Поиск min\n" +
+                "7. Поиск max\n" +
+                "8. Поиск среднего");
+            Console.Write("Выберите операцию над массивом: ");
+
+            int choice = int.Parse(Console.ReadLine());
+
+            switch (choice)
+            {
+                case 1:
+                    Console.Write("Введите размер массива: ");
+                    int n = int.Parse(Console.ReadLine());
+                    int[] array = new int[n];
+                    RandomInitialization(array);
+                    PrintArray("Массив", array);
+                    break;
+                case 2:
+                    Console.Write("Введите размер массива: ");
+                    n = int.Parse(Console.ReadLine());
+                    int[] array1 = new int[n];
+                    RandomInitialization(array1);
+                    Console.Write("Введите размер второго массива: ");
+                    n = int.Parse(Console.ReadLine());
+                    int[] array2 = new int[n];
+                    RandomInitialization(array2);
+                    PrintArray("Массив1", array1);
+                    PrintArray("Массив2", array2);
+                    PrintArray("Итоговый массив", SumOfArrays(array1, array2));
+                    break;
+                case 3:
+                    Console.Write("Введите размер массива: ");
+                    n = int.Parse(Console.ReadLine());
+                    array = new int[n];
+                    RandomInitialization(array);
+                    PrintArray("Исходный массив", array);
+                    Console.Write("Введите число на которое умножить массив: ");
+                    int num = int.Parse(Console.ReadLine());
+                    PrintArray("Умноженный массив", ArrayMultiply(array, num));
+                    break;
+                case 4:
+                    Console.Write("Введите размер массива1: ");
+                    n = int.Parse(Console.ReadLine());
+                    array1 = new int[n];
+                    ArrayInitialization(array1);
+                    Console.Write("Введите размер массива2: ");
+                    n = int.Parse(Console.ReadLine());
+                    array2 = new int[n];
+                    ArrayInitialization(array2);
+                    Console.Write("Совпадающие значения: ");
+                    foreach (int item in SearchForMatch(array1,array2))
+                    {
+                        Console.Write(item+" ");
+                    }
+                    break;
+                case 5:
+                    Console.Write("Введите размер массива: ");
+                    n = int.Parse(Console.ReadLine());
+                    array = new int[n];
+                    ArrayInitialization(array);
+                    PrintArray("Отсортированный массив", SortDescending(array));
+                    break;
+                case 6:
+                    Console.Write("Введите размер массива: ");
+                    n = int.Parse(Console.ReadLine());
+                    array = new int[n];
+                    ArrayInitialization(array);
+                    Console.Write($"Минимальное значение: {FindMin(array)}");
+                    break;
+                case 7:
+                    Console.Write("Введите размер массива: ");
+                    n = int.Parse(Console.ReadLine());
+                    array = new int[n];
+                    ArrayInitialization(array);
+                    Console.Write($"Максимальное значение: {FindMax(array)}");
+                    break;
+                case 8:
+                    Console.Write("Введите размер массива: ");
+                    n = int.Parse(Console.ReadLine());
+                    array = new int[n];
+                    ArrayInitialization(array);
+                    Console.Write($"Среднее значение: {FindAvg(array)}");
+                    break;
+                default:
+                    Console.WriteLine("Некорректный выбор");
+                    break;
+            }
+        }
+        static void Exercise4()
+        {
+            Random rand = new Random();
+            Console.Write("Введите кол-во рядов: ");
+            int n = int.Parse(Console.ReadLine());
+            Console.Write("Введите кол-во мест в ряду: ");
+            int m = int.Parse(Console.ReadLine());
+            int[,] seats = new int[n,m];
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < m; j++)
+                {
+                    seats[i, j] = rand.Next(2);
+                }
+            }
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < m; j++)
+                {
+                    Console.Write($"{seats[i, j]} \t");
+                }
+                Console.WriteLine();
+            }
+
+            Console.Write("Введите кол-во мест для покупки: ");
+            int k = int.Parse(Console.ReadLine());
+            int row, count,prev;
+            row = count = prev = 0;
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < m; j++)
+                {
+                    if (seats[i, j] == 0)
+                    {
+                        count+=1;
+                        if (count >= k && row<=prev)
+                        {
+                            prev = row;
+                            row = i+1;
+                        }
+                    }
+                }
+                count = 0;
+            }
+            Console.WriteLine(row);
+        }
+        static void Exercise5()
+        {
+            int[,] matrix1 = new int[1000, 1000];
+            int[,] matrix2 = new int[1000, 1000];
+
+            Random random = new Random();
+            for (int i = 0; i < 1000; i++)
+            {
+                for (int j = 0; j < 1000; j++)
+                {
+                    matrix1[i, j] = random.Next(10);
+                    matrix2[i, j] = random.Next(10);
+                }
+            }
+
+            int[,] result = new int[1000, 1000];
+
+            for (int i = 0; i < 1000; i++)
+            {
+                for (int j = 0; j < 1000; j++)
+                {
+                    for (int k = 0; k < 1000; k++)
+                    {
+                        result[i, j] += matrix1[i, k] * matrix2[k, j];
+                    }
+                }
+            }
+
+            for (int i = 0; i < 1000; i++)
+            {
+                for (int j = 0; j < 1000; j++)
+                {
+                    Console.Write(result[i, j] + " ");
+                }
+                Console.WriteLine();
+            }
+
+        }
+        static int[] SumOfArrays(int[] array1, int[] array2)
+        {
+            if (array1.Length == array2.Length)
+            {
+                for (int i = 0; i < array1.Length; i++)
+                    array1[i] += array2[i];
+
+                return array1;
+            }
+            else return null;
+        }
+        static int[] RandomInitialization(int[] array)
+        {
+            Random rand = new Random();
+
+            for (int i = 0; i < array.Length; i++)
+                array[i] = rand.Next(1, 100);
+
+            return array;
+        }
+        static int[] ArrayInitialization(int[] array)
+        {
+            for(int i = 0; i < array.Length; i++)
+            {
+                Console.Write($"Введите {i+1}-ый элемент: ");
+                array[i]= int.Parse(Console.ReadLine());
+            }
+            return array;
+        }
+        static int[] ArrayMultiply(int[] array, int num)
+        {
+            for (int i = 0; i < array.Length; i++)
+                array[i] *= num;
+            
+            return array;
+        }
+
+        static List<int> SearchForMatch(int[] array1,int[] array2)
+        {
+            List<int> matchingValues = new List<int>();
+
+            for (int i = 0; i < array1.Length; i++)
+            {
+                for (int j = 0; j < array2.Length; j++)
+                {
+                    if (array1[i] == array2[j])
+                    {
+                        matchingValues.Add(array1[i]);
+                    }
+                }
+            }
+
+            return matchingValues;
+        }
+
+        static void PrintArray(string nameArray, int[] array)
+        {
+            Console.WriteLine($"{nameArray}:{string.Join(", ", array)}");
+        }
+        static int[] SortDescending(int[] array)
+        {
+            for (int i = 0; i < array.Length - 1; i++)
+            {
+                for (int j = 0; j < array.Length - i - 1; j++)
+                {
+                    if (array[j] < array[j + 1])
+                    {
+                        int temp = array[j];
+                        array[j] = array[j + 1];
+                        array[j + 1] = temp;
+                    }
+                }
+            }
+
+            return array;
+        }
+        static int FindMin(int[] array)
+        {
+            int min = 1000;
+
+            foreach (var item in array)
+            {
+                if (min > item)
+                {
+                    min = item;
+                }
+            }
+
+            return min;
+        }
+        static int FindMax(int[] array)
+        {
+            int max = 0;
+
+            foreach (var item in array)
+            {
+                if (max < item)
+                {
+                    max = item;
+                }
+            }
+
+            return max;
+        }
+        static int FindAvg(int[] array)
+        {
+            int sum = 0;
+
+            foreach (var item in array)
+            {
+                sum += item;
+            }
+
+            return sum/array.Length;
+        }
+    }
+}
